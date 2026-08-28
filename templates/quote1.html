@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get a Quote — Policy Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #EDEFEA;
+      --surface: #FFFFFF;
+      --ink: #1B2A3D;
+      --text: #24272B;
+      --muted: #6B7268;
+      --divider: #D8DAD3;
+      --comparison: #2F6F62;
+      --comparison-bg: #E4EEEC;
+      --wording: #B7791F;
+      --wording-bg: #F5EBDA;
+      --claims: #6B4FA0;
+      --claims-bg: #ECE7F5;
+      --warn: #A33;
+      --warn-bg: #FBEAEA;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 820px;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    header {
+      padding: 28px 24px 18px;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    header h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 28px;
+      margin: 0 0 4px;
+      color: var(--ink);
+    }
+
+    header .sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    nav.tabs {
+      display: flex;
+      gap: 4px;
+      margin-top: 14px;
+    }
+
+    nav.tabs a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    nav.tabs a.active {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    main {
+      padding: 24px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .panel h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      margin: 0 0 14px;
+      color: var(--ink);
+    }
+
+    .upload-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    input[type=file] {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+
+    button {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--divider);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .warning-box {
+      background: var(--warn-bg);
+      color: #7a2a2a;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .sample-note {
+      background: var(--wording-bg);
+      color: #6b4a0f;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .trip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .trip-grid .field-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    table.compare {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    table.compare th,
+    table.compare td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    table.compare th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .badge.ok {
+      background: var(--comparison-bg);
+      color: var(--comparison);
+    }
+
+    .badge.warn {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .badge.na {
+      background: #eee;
+      color: #888;
+    }
+
+    .quote-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .quote-card {
+      border: 1px solid var(--divider);
+      border-radius: 10px;
+      padding: 16px;
+      position: relative;
+    }
+
+    .quote-card.recommended {
+      border-color: var(--comparison);
+      background: var(--comparison-bg);
+    }
+
+    .quote-card .product-name {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      color: var(--ink);
+      margin: 0 0 6px;
+    }
+
+    .quote-card .premium {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px;
+      color: var(--ink);
+      margin: 6px 0;
+    }
+
+    .quote-card .rec-tag {
+      position: absolute;
+      top: -10px;
+      right: 14px;
+      background: var(--comparison);
+      color: #fff;
+      font-size: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+
+    .disclaimer {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    #result {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <h1>Get a Quote</h1>
+      <div class="sub">Product A · Product B · Product C</div>
+      <nav class="tabs">
+        <a href="/">Chat</a>
+        <a href="/quote" class="active">Get a Quote</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="panel">
+        <h2>Upload your travel document</h2>
+        <p class="hint">Flight confirmation, hotel booking, or itinerary — PDF or image. We'll read it directly and pull
+          out your trip details.</p>
+        <div class="upload-row">
+          <input type="file" id="file-input" accept=".pdf,.jpg,.jpeg,.png,.webp" />
+          <button id="upload-btn">Extract & quote</button>
+          <button id="sample-btn" class="secondary" type="button">Use a sample trip instead</button>
+        </div>
+        <div id="upload-status"></div>
+      </div>
+
+      <div id="result">
+        <div class="panel" id="trip-panel">
+          <h2>Extracted trip details</h2>
+          <div class="trip-grid" id="trip-grid"></div>
+          <div id="trip-warnings"></div>
+        </div>
+
+        <div class="panel" id="benefits-panel">
+          <h2>Coverage adequacy vs. claims data</h2>
+          <table class="compare" id="benefits-table"></table>
+        </div>
+
+        <div class="panel" id="quotes-panel">
+          <h2>Quote comparison</h2>
+          <div class="quote-cards" id="quote-cards"></div>
+          <div class="disclaimer" id="disclaimer"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const uploadBtn = document.getElementById('upload-btn');
+    const sampleBtn = document.getElementById('sample-btn');
+    const statusEl = document.getElementById('upload-status');
+    const resultEl = document.getElementById('result');
+
+    function money(n) {
+      if (n === null || n === undefined) return '—';
+      return 'SGD ' + Number(n).toLocaleString();
+    }
+
+    function renderResult(data) {
+      resultEl.style.display = 'block';
+
+      // trip grid
+      const t = data.trip_data;
+      const fields = [
+        ['Traveler', t.traveler_name],
+        ['Departure', t.departure_date],
+        ['Return', t.return_date],
+        ['Duration', t.trip_duration_days ? t.trip_duration_days + ' days' : '—'],
+        ['Destination', [t.destination_city, t.destination_country].filter(Boolean).join(', ')],
+        ['Trip cost', t.trip_cost ? money(t.trip_cost) : '—'],
+        ['Cabin class', t.cabin_class || '—'],
+      ];
+      const tripGrid = document.getElementById('trip-grid');
+      tripGrid.innerHTML = '';
+      for (const [label, value] of fields) {
+        const div = document.createElement('div');
+        div.innerHTML = `<span class="field-label">${label}</span>${value || '—'}`;
+        tripGrid.appendChild(div);
+      }
+
+      const warningsEl = document.getElementById('trip-warnings');
+      warningsEl.innerHTML = '';
+      if (t._is_sample) {
+        const note = document.createElement('div');
+        note.className = 'sample-note';
+        note.textContent = (t._warning || 'Using a sample trip.');
+        warningsEl.appendChild(note);
+      }
+      for (const w of data.warnings) {
+        const box = document.createElement('div');
+        box.className = 'warning-box';
+        box.textContent = w;
+        warningsEl.appendChild(box);
+      }
+
+      // benefits table
+      const table = document.getElementById('benefits-table');
+      const products = data.quotes.map(q => q.product);
+      let html = '<tr><th>Benefit</th><th>Claims p80 (destination)</th>' +
+        products.map(p => `<th>${p}</th>`).join('') + '</tr>';
+      for (const b of data.benefit_analysis) {
+        html += '<tr>';
+        html += `<td>${b.benefit}${b.is_destination_specific ? '' : ' <span class="badge na">generic</span>'}</td>`;
+        html += `<td>${b.claim_p80_sgd ? money(b.claim_p80_sgd) : '—'}</td>`;
+        for (const p of products) {
+          const info = b.products[p];
+          let badge = '<span class="badge na">n/a</span>';
+          if (info.adequate === true) badge = '<span class="badge ok">adequate</span>';
+          if (info.adequate === false) badge = '<span class="badge warn">may be short</span>';
+          html += `<td>${info.coverage_limit || '—'}<br>${badge}</td>`;
+        }
+        html += '</tr>';
+      }
+      table.innerHTML = html;
+
+      // quote cards
+      const cardsEl = document.getElementById('quote-cards');
+      cardsEl.innerHTML = '';
+      for (const q of data.quotes) {
+        const card = document.createElement('div');
+        card.className = 'quote-card' + (q.recommended ? ' recommended' : '');
+        card.innerHTML = `
+      ${q.recommended ? '<div class="rec-tag">Recommended</div>' : ''}
+      <div class="product-name">${q.product}</div>
+      <div class="premium">${money(q.estimated_premium_sgd)}</div>
+      <div class="hint">estimated premium</div>
+    `;
+        cardsEl.appendChild(card);
+      }
+      document.getElementById('disclaimer').textContent = data.premium_disclaimer;
+    }
+
+    async function submitQuote(body, isFormData) {
+      statusEl.textContent = 'Reading document and building your quote…';
+      uploadBtn.disabled = true;
+      sampleBtn.disabled = true;
+      try {
+        const res = await fetch('/api/quote', {
+          method: 'POST',
+          credentials: 'include', // <--- THIS ALLOWS THE QUOTE PAGE TO SAVE TO THE BACKPACK
+          headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+          body,
+        });
+        const data = await res.json();
+        if (data.error) {
+          statusEl.innerHTML = `<div class="warning-box">${data.error}</div>`;
+          return;
+        }
+        statusEl.textContent = '';
+        renderResult(data);
+      } catch (err) {
+        statusEl.innerHTML = `<div class="warning-box">Network error: ${err.message}</div>`;
+      } finally {
+        uploadBtn.disabled = false;
+        sampleBtn.disabled = false;
+      }
+    }
+
+    uploadBtn.addEventListener('click', () => {
+      if (!fileInput.files.length) {
+        statusEl.innerHTML = '<div class="warning-box">Choose a file first, or use the sample trip button.</div>';
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      submitQuote(formData, true);
+    });
+
+    sampleBtn.addEventListener('click', () => {
+      submitQuote(JSON.stringify({ use_sample: true }), false);
+    });
+  </script>
+</body>
+
+</html>

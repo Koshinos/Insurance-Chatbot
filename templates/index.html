@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Policy Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #EDEFEA;
+      --surface: #FFFFFF;
+      --ink: #1B2A3D;
+      --text: #24272B;
+      --muted: #6B7268;
+      --divider: #D8DAD3;
+      --comparison: #2F6F62;
+      --comparison-bg: #E4EEEC;
+      --wording: #B7791F;
+      --wording-bg: #F5EBDA;
+      --claims: #6B4FA0;
+      --claims-bg: #ECE7F5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      padding: 28px 24px 18px;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    nav.tabs {
+      display: flex;
+      gap: 4px;
+      margin-top: 14px;
+    }
+
+    nav.tabs a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    nav.tabs a.active {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    header h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 28px;
+      margin: 0 0 4px;
+      color: var(--ink);
+    }
+
+    header .sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .sample-banner {
+      margin-top: 12px;
+      font-size: 13px;
+      background: var(--wording-bg);
+      color: #6b4a0f;
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .msg {
+      max-width: 82%;
+      line-height: 1.5;
+      font-size: 15px;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: var(--ink);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 14px 14px 2px 14px;
+    }
+
+    .msg.assistant {
+      align-self: flex-start;
+      background: var(--surface);
+      padding: 14px 16px;
+      border-radius: 2px 14px 14px 14px;
+      border-left: 3px solid var(--divider);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .msg.assistant.tag-compare {
+      border-left-color: var(--comparison);
+    }
+
+    .msg.assistant.tag-wording {
+      border-left-color: var(--wording);
+    }
+
+    .msg.assistant.tag-claims {
+      border-left-color: var(--claims);
+    }
+
+    .msg.assistant.tag-multi {
+      border-image: linear-gradient(var(--comparison), var(--wording), var(--claims)) 1;
+      border-left-width: 3px;
+      border-left-style: solid;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .tag-chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    .tag-chip.compare {
+      background: var(--comparison-bg);
+      color: var(--comparison);
+    }
+
+    .tag-chip.wording {
+      background: var(--wording-bg);
+      color: var(--wording);
+    }
+
+    .tag-chip.claims {
+      background: var(--claims-bg);
+      color: var(--claims);
+    }
+
+    .msg-text {
+      white-space: pre-wrap;
+    }
+
+    .msg.error {
+      align-self: flex-start;
+      color: #a33;
+      font-size: 14px;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      padding: 16px 24px 24px;
+      border-top: 1px solid var(--divider);
+    }
+
+    input[type=text] {
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      background: var(--surface);
+    }
+
+    input[type=text]:focus {
+      outline: 2px solid var(--comparison);
+      outline-offset: 1px;
+    }
+
+    button {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .typing {
+      align-self: flex-start;
+      color: var(--muted);
+      font-size: 13px;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <h1>Policy Assistant</h1>
+      <div class="sub">Scootsurance · TravelEasy · TravelEasy Pre-Ex</div>
+      <nav class="tabs">
+        <a href="/" class="active">Chat</a>
+        <a href="/quote">Get a Quote</a>
+      </nav>
+      {% if is_sample %}
+      <div class="sample-banner">Running on sample/mock policy data — drop your filled taxonomy into
+        data/taxonomy_filled.json to use real data.</div>
+      {% endif %}
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="msg assistant">
+        <div class="msg-text">Ask me anything about Scootsurance, TravelEasy, or TravelEasy Pre-Ex — coverage limits,
+          exclusions, eligibility, or "what happens if..." scenarios.</div>
+      </div>
+    </div>
+
+    <form id="chat-form">
+      <input type="text" id="input" placeholder="e.g. Which plan has better medical coverage?" autocomplete="off" />
+      <button type="submit" id="send-btn">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const messagesEl = document.getElementById('messages');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function addMessage(role, text, sources) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + role;
+
+      if (role === 'assistant' && sources && sources.length) {
+        const hasCompare = sources.includes('compare_policy_data');
+        const hasWording = sources.includes('get_policy_wording');
+        const hasClaims = sources.includes('get_claims_insight');
+        const activeCount = [hasCompare, hasWording, hasClaims].filter(Boolean).length;
+
+        if (activeCount > 1) div.classList.add('tag-multi');
+        else if (hasCompare) div.classList.add('tag-compare');
+        else if (hasWording) div.classList.add('tag-wording');
+        else if (hasClaims) div.classList.add('tag-claims');
+
+        const tagRow = document.createElement('div');
+        tagRow.className = 'tag-row';
+        const chipDefs = [
+          [hasCompare, 'compare', 'Comparison'],
+          [hasWording, 'wording', 'Policy wording'],
+          [hasClaims, 'claims', 'Typical costs'],
+        ];
+        for (const [present, cls, label] of chipDefs) {
+          if (!present) continue;
+          const chip = document.createElement('span');
+          chip.className = 'tag-chip ' + cls;
+          chip.textContent = label;
+          tagRow.appendChild(chip);
+        }
+        div.appendChild(tagRow);
+      }
+
+      const textEl = document.createElement('div');
+      textEl.className = 'msg-text';
+      textEl.textContent = text;
+      div.appendChild(textEl);
+
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage('user', text);
+      input.value = '';
+      sendBtn.disabled = true;
+
+      const typing = document.createElement('div');
+      typing.className = 'typing';
+      typing.textContent = 'Thinking…';
+      messagesEl.appendChild(typing);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      try {
+        // ---> THE FIX IS APPLIED RIGHT HERE <---
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text }) // Notice it uses your 'text' variable
+        });
+
+        const data = await res.json();
+        typing.remove();
+        if (data.error) {
+          addMessage('error', 'Error: ' + data.error);
+        } else {
+          addMessage('assistant', data.reply, data.sources);
+        }
+      } catch (err) {
+        typing.remove();
+        addMessage('error', 'Network error: ' + err.message);
+      } finally {
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    });
+  </script>
+</body>
+
+</html>

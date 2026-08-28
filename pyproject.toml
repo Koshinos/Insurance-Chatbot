@@ -1,0 +1,15 @@
+[project]
+name = "ancileo-msig-main"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dotenv>=0.9.9",
+    "flask>=3.0",
+    "flask-cors>=6.0.5",
+    "openai>=1.40",
+    "pymupdf>=1.28.2",
+    "python-dotenv>=1.2.3",
+    "stripe>=15.6.0",
+]

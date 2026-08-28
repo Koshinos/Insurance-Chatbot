@@ -1,0 +1,17 @@
+{
+  "overseas_medical_expenses": {
+    "Product A": 70000,
+    "Product B": 250000,
+    "Product C": 250000
+  },
+  "trip_cancellation": {
+    "Product A": 1000,
+    "Product B": 5000,
+    "Product C": 5000
+  },
+  "delayed_baggage": {
+    "Product A": 800,
+    "Product B": 600,
+    "Product C": 600
+  }
+}
